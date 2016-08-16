@@ -30,24 +30,8 @@ func helpHandler(u *tgbotapi.Update) string {
 	}
 
 	var text string
-	if "/from" == u.Message.Text {
-		text = "Откуда выезжаешь?"
-	} else if "/to" == u.Message.Text {
-		text = "Куда хочешь поехать?"
-	} else if "/date" == u.Message.Text {
-		text = "Когда хочешь выехать? Используй формат 31.01.2016"
-	} else if "/price" == u.Message.Text {
-		text = "Сколько есть денег на билет?"
-	} else if "/help" == u.Message.Text {
-		text = "/from - Город отправления\n" +
-			"/to - Город прибытия\n" +
-			"/date - Дата отправления\n" +
-			"/price - Максимальная цена билета\n" +
-			"/next - Найти ближайший поезд\n" +
-			"/info - Показать твои настроики\n" +
-			"/cancel - Отмена последней команды\n" +
-			"/help - Список доступных команд\n"
-		chats[u.Message.Chat.ID].CancelCommand()
+	if "/min" == u.Message.Text {
+		text = "Укажите цену, к примеру 65.32, и я напишу тебе когда курс опустится ниже"
 	} else {
 		text = "Набери /help для списка команд"
 	}

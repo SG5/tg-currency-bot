@@ -53,7 +53,7 @@ func startBot() {
 			chat := Chat{
 				ChatId: update.Message.Chat.ID,
 			}
-			db.Find(&chat, update.Message.Chat.ID)
+			db.Where("chat_id = ?", update.Message.Chat.ID).First(&chat)
 
 			chats[update.Message.Chat.ID] = &chat
 		}
@@ -62,15 +62,14 @@ func startBot() {
 	}
 }
 
-func handleMoex(channel <-chan MOEXRow, bot *tgbotapi.BotAPI ) {
+func handleMoex(channel <-chan MOEXRow, bot *tgbotapi.BotAPI) {
 	var chats []Chat
 	for row := range channel {
-		log.Println("got row ", row)
-		db.Where("chat_min <= ?", row.Last).Find(&chats)
+		db.Where("chat_min >= ?", row.Last).Find(&chats)
 
 		for _, chat := range chats {
 			bot.Send(
-				tgbotapi.NewMessage(chat.ChatId, fmt.Sprintf("Курс понизился до %f", row.Last)),
+				tgbotapi.NewMessage(chat.ChatId, fmt.Sprintf("Текущий курс %f", row.Last)),
 			)
 		}
 	}
@@ -82,7 +81,6 @@ func handleMessage(u *tgbotapi.Update) tgbotapi.Chattable {
 
 	if handler, ok = commands[u.Message.Text]; !ok {
 		if handler, ok = stateCommands[chats[u.Message.Chat.ID].ChatLastCommand]; !ok {
-			log.Println("!!", chats[u.Message.Chat.ID].ChatLastCommand)
 			handler = helpHandler
 		}
 	}

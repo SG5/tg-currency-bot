@@ -58,7 +58,7 @@ func GetUpdateChannel(SecID string) (<-chan MOEXRow, error) {
 				}
 			}
 
-			time.Sleep(3 * time.Minute)
+			time.Sleep(time.Minute)
 		}
 	}()
 

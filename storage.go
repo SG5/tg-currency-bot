@@ -11,7 +11,7 @@ var db *gorm.DB
 
 type Chat struct {
 	gorm.Model
-	ChatId          int64
+	ChatId          int64 `sql:"index; unique"`
 	UserId          int64
 	ChatMin         float32
 	ChatLastCommand string
